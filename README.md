@@ -1,31 +1,110 @@
-Custom ELT Project
-This repository contains a custom Extract, Load, Transform (ELT) project that utilizes Docker and PostgreSQL to demonstrate a simple ELT process.
+🚀 Custom ELT Project
 
-Repository Structure
-docker-compose.yaml: This file contains the configuration for Docker Compose, which is used to orchestrate multiple Docker containers. It defines three services:
+This repository demonstrates a modern Extract, Load, Transform (ELT) pipeline using a real-world data engineering stack. The project leverages Docker, Airflow, Airbyte, dbt, cron, PostgreSQL, and Python scripting to orchestrate ingestion, transformation, and automation.
 
-source_postgres: The source PostgreSQL database.
-destination_postgres: The destination PostgreSQL database.
-elt_script: The service that runs the ELT script.
-elt_script/Dockerfile: This Dockerfile sets up a Python environment and installs the PostgreSQL client. It also copies the ELT script into the container and sets it as the default command.
+📂 Repository Structure
 
-elt_script/elt_script.py: This Python script performs the ELT process. It waits for the source PostgreSQL database to become available, then dumps its data to a SQL file and loads this data into the destination PostgreSQL database.
+docker-compose.yaml – Orchestrates all services (Airflow, Airbyte, PostgreSQL, etc.)
 
-source_db_init/init.sql: This SQL script initializes the source database with sample data. It creates tables for users, films, film categories, actors, and film actors, and inserts sample data into these tables.
+airflow/ – Contains DAGs and supporting files for orchestrating the ELT pipeline
 
-How It Works
-Docker Compose: Using the docker-compose.yaml file, three Docker containers are spun up:
+dags/elt_pipeline_dag.py – Airflow DAG defining the pipeline workflow
 
-A source PostgreSQL database with sample data.
-A destination PostgreSQL database.
-A Python environment that runs the ELT script.
-ELT Process: The elt_script.py waits for the source PostgreSQL database to become available. Once it's available, the script uses pg_dump to dump the source database to a SQL file. Then, it uses psql to load this SQL file into the destination PostgreSQL database.
+airbyte/ – Configuration for data ingestion (e.g., syncing source PostgreSQL → destination PostgreSQL)
 
-Database Initialization: The init.sql script initializes the source database with sample data. It creates several tables and populates them with sample data.
+dbt_project/ – dbt models, seeds, and configs for SQL-based transformations
 
-Getting Started
-Ensure you have Docker and Docker Compose installed on your machine.
-Clone this repository.
-Navigate to the repository directory and run docker-compose up.
-Once all containers are up and running, the ELT process will start automatically.
-After the ELT process completes, you can access the source and destination PostgreSQL databases on ports 5433 and 5434, respectively.
+scripts/ – Custom Python or cron jobs to support extra automation or data checks
+
+source_db_init/init.sql – Initializes the source PostgreSQL database with sample tables and data
+
+⚙️ Tools Used
+
+Docker & Docker Compose → Containerize and run all services together
+
+PostgreSQL → Used as both source and destination databases
+
+Airbyte → Handles Extract + Load (syncs data from source PostgreSQL → destination PostgreSQL)
+
+dbt → Handles Transform (runs SQL models inside the destination warehouse)
+
+Airflow → Orchestrates the pipeline (e.g., trigger Airbyte sync → run dbt models)
+
+cron → Lightweight job scheduling for recurring scripts or health checks
+
+Python → Custom scripting for automation or data validation
+
+🔄 How It Works
+
+Source Database Initialization
+
+The source_postgres container is populated with sample data (tables, users, films, categories, etc.) from init.sql.
+
+Data Ingestion with Airbyte
+
+Airbyte is configured to extract data from source_postgres and load it into destination_postgres.
+
+Pipeline Orchestration with Airflow
+
+Airflow DAG (elt_pipeline_dag.py) orchestrates:
+
+Trigger Airbyte sync (Extract + Load)
+
+Run dbt models (Transform)
+
+Optionally run Python validation scripts
+
+Transformations with dbt
+
+dbt models clean and transform the raw data into analytics-ready tables.
+
+Scheduling
+
+Pipelines can be scheduled via Airflow or cron jobs for recurring runs.
+
+🚀 Getting Started
+Prerequisites
+
+Docker & Docker Compose installed on your machine
+
+Setup
+# Clone repository
+git clone https://github.com/your-username/custom-elt-project.git
+cd custom-elt-project
+
+# Start all services
+docker-compose up
+
+Accessing Services
+
+Airflow UI → http://localhost:8080
+
+Airbyte UI → http://localhost:8000
+
+Source PostgreSQL → port 5433
+
+Destination PostgreSQL → port 5434
+
+✅ Workflow Summary
+
+Airbyte extracts data from source_postgres
+
+Airbyte loads raw data into destination_postgres
+
+Airflow triggers the pipeline and orchestrates tasks
+
+dbt runs SQL models to transform the raw data into clean, analytics-ready tables
+
+Python scripts / cron jobs handle any extra automation or checks
+
+📊 Example Use Case
+
+Imagine a movie database system:
+
+Source DB contains raw user, film, and actor tables.
+
+Airbyte syncs this into the destination DB.
+
+dbt creates transformed tables like dim_users, dim_films, and fact_user_activity.
+
+Airflow ensures everything runs in the right order daily at midnight.
