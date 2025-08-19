@@ -1,0 +1,17 @@
+For docker:
+
+docker compose up
+docker compose down
+docker build elt_script.py
+docker exec -it elt-destination_postgres-1 psql -U postgres | for accessing postgres database inside the docker container
+\c destination_db | navigate to destination_db database 
+\dt | show the tables inside the database(destination_db)
+
+
+
+
+For dbt:
+
+dbt --version | to check if dbt is installed
+dbt init | initialize dbt in project
+nano ~/.dbt/profiles.yml | configure dbt profile
