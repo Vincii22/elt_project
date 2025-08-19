@@ -69,7 +69,7 @@ Docker & Docker Compose installed on your machine
 
 Setup
 # Clone repository
-git clone https://github.com/your-username/custom-elt-project.git
+git clone https://github.com/Vincii22/elt-project.git
 cd custom-elt-project
 
 # Start all services
