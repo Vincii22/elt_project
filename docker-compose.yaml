@@ -8,9 +8,9 @@ services:
     networks:
       - elt_network
     environment:
-      - POSTGRES_DB: source_db
-      - POSTGRES_USER: postgres
-      - POSTGRES_PASSWORD: redblood12
+      POSTGRES_DB: source_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: redblood12
     volumes:
       - ./source_db_init.sql:/docker-entrypoint-initdb.d/init.sql
     
@@ -21,9 +21,9 @@ services:
     networks:
       - elt_network
     environment:
-      - POSTGRES_DB: destination_db
-      - POSTGRES_USER: postgres
-      - POSTGRES_PASSWORD: redblood12
+      POSTGRES_DB: destination_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: redblood12
   
   elt_script:
     build:
